@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Painel | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Olá, {{ current_user.nome.split(" ")[0] }} 👋</h1>
+  <p class="subtitle">Painel da equipe Florescer.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ total_pacientes }}</div>
+      <div class="stat-label">Pacientes ativos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ total_usuarios }}</div>
+      <div class="stat-label">Usuários ativos</div>
+    </div>
+  </div>
+
+  <p>
+    <a href="{{ url_for('admin.pacientes') }}">Ver pacientes</a>
+    {% if current_user.is_admin %}
+      &nbsp;·&nbsp;
+      <a href="{{ url_for('admin.usuarios') }}">Gerenciar usuários</a>
+    {% endif %}
+  </p>
+</div>
+{% endblock %}

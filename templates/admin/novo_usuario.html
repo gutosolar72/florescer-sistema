@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Novo usuário | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Novo usuário</h1>
+  <p class="subtitle">Cadastre alguém da equipe ou um responsável de paciente.</p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" style="max-width: 420px;">
+    <div class="field">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" name="nome" required>
+    </div>
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="field">
+      <label for="senha">Senha provisória</label>
+      <input type="password" id="senha" name="senha" required>
+    </div>
+    <div class="field">
+      <label for="tipo">Tipo de acesso</label>
+      <select id="tipo" name="tipo" onchange="document.getElementById('campo-papel').style.display = this.value === 'equipe' ? 'block' : 'none'">
+        <option value="equipe">Equipe (interno)</option>
+        <option value="responsavel">Responsável de paciente</option>
+      </select>
+    </div>
+    <div class="field" id="campo-papel">
+      <label for="papel">Papel na equipe</label>
+      <select id="papel" name="papel">
+        {% for p in papeis %}
+        <option value="{{ p }}">{{ p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Criar usuário</button>
+  </form>
+</div>
+{% endblock %}

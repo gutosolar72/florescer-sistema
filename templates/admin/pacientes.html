@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Pacientes | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Pacientes</h1>
+  <p class="subtitle">
+    {% if current_user.papel == "terapeuta" %}
+      Pacientes atribuídos a você.
+    {% else %}
+      Todos os pacientes ativos.
+    {% endif %}
+  </p>
+
+  {% if pacientes %}
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Terapeuta</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pacientes %}
+      <tr>
+        <td>{{ p.nome }}</td>
+        <td>{{ p.terapeuta.nome if p.terapeuta else "—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">Nenhum paciente cadastrado ainda.</div>
+  {% endif %}
+</div>
+{% endblock %}

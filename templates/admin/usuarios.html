@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Usuários | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Usuários</h1>
+  <p class="subtitle">Equipe e responsáveis com acesso ao sistema.</p>
+
+  <div class="actions-bar">
+    <a href="{{ url_for('admin.novo_usuario') }}" class="btn-inline">+ Novo usuário</a>
+  </div>
+
+  {% if usuarios %}
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Tipo</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in usuarios %}
+      <tr>
+        <td>{{ u.nome }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          {% if u.tipo == "equipe" %}
+            <span class="badge badge-{{ u.papel }}">{{ u.papel }}</span>
+          {% else %}
+            <span class="badge badge-responsavel">responsável</span>
+          {% endif %}
+        </td>
+        <td>{{ "Ativo" if u.ativo else "Desativado" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">Nenhum usuário cadastrado ainda.</div>
+  {% endif %}
+</div>
+{% endblock %}

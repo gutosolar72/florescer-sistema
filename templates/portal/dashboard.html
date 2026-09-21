@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Área do Responsável | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Olá, {{ current_user.nome.split(" ")[0] }} 👋</h1>
+  <p class="subtitle">Aqui você acompanha o atendimento do(s) seu(s) paciente(s).</p>
+
+  {% if pacientes %}
+  <table>
+    <thead>
+      <tr>
+        <th>Paciente</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pacientes %}
+      <tr><td>{{ p.nome }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">Nenhum paciente vinculado ao seu acesso ainda.</div>
+  {% endif %}
+</div>
+{% endblock %}

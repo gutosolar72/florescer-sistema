@@ -1,0 +1,9 @@
+<header class="topbar">
+  <div class="container topbar-inner">
+    <img src="{{ url_for('static', filename='img/logo-florescer.png') }}" alt="Florescer" class="logo">
+    <div class="topbar-user">
+      <span>{{ current_user.nome }}</span>
+      <a href="{{ url_for('auth.logout') }}">Sair</a>
+    </div>
+  </div>
+</header>
