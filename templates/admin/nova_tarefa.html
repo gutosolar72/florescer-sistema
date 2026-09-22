@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Nova tarefa | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Nova tarefa — {{ paciente.nome }}</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" style="max-width: 480px;">
+    <div class="field">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" name="titulo" required>
+    </div>
+    <div class="field">
+      <label for="descricao">Descrição (opcional)</label>
+      <textarea id="descricao" name="descricao" rows="4" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid #e0d8c3;font-family:inherit;font-size:1rem;"></textarea>
+    </div>
+    <div class="field">
+      <label for="prazo">Prazo (opcional)</label>
+      <input type="date" id="prazo" name="prazo">
+    </div>
+    <button type="submit" class="btn btn-primary">Criar tarefa</button>
+  </form>
+</div>
+{% endblock %}

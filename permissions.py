@@ -36,3 +36,25 @@ def responsavel_required(view_func):
         return view_func(*args, **kwargs)
 
     return wrapped
+
+
+def paciente_do_responsavel_ou_403(paciente_id):
+    """Garante que o paciente pedido é vinculado ao responsável logado.
+    Retorna o Paciente se estiver tudo certo, senão aborta com 403."""
+    from models import Paciente
+
+    paciente = Paciente.query.get_or_404(paciente_id)
+    if paciente not in current_user.pacientes_como_responsavel:
+        abort(403)
+    return paciente
+
+
+def paciente_da_equipe_ou_403(paciente_id):
+    """Garante que, se o usuário logado é terapeuta, o paciente pedido é
+    atribuído a ele. Admin/secretaria passam livre. Retorna o Paciente."""
+    from models import Paciente
+
+    paciente = Paciente.query.get_or_404(paciente_id)
+    if current_user.papel == "terapeuta" and paciente.terapeuta_id != current_user.id:
+        abort(403)
+    return paciente

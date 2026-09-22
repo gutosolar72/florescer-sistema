@@ -138,3 +138,50 @@ class Evolucao(db.Model):
 
     def __repr__(self):
         return f"<Evolucao paciente={self.paciente_id} em {self.data}>"
+
+
+class TarefaCasa(db.Model):
+    """Tarefa proposta pelo terapeuta pra ser feita em casa. Visível pro
+    responsável marcar como concluída."""
+
+    __tablename__ = "tarefa_casa"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    paciente_id = db.Column(db.Integer, db.ForeignKey("paciente.id"), nullable=False)
+    paciente = db.relationship("Paciente", backref=db.backref("tarefas", lazy="dynamic"))
+
+    criado_por_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
+    criado_por = db.relationship("Usuario")
+
+    titulo = db.Column(db.String(160), nullable=False)
+    descricao = db.Column(db.Text, nullable=True)
+    prazo = db.Column(db.Date, nullable=True)
+
+    concluida = db.Column(db.Boolean, default=False, nullable=False)
+    concluida_em = db.Column(db.DateTime, nullable=True)
+
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<TarefaCasa {self.titulo} paciente={self.paciente_id}>"
+
+
+class Mensagem(db.Model):
+    """Comunicação entre equipe e responsável, sempre atrelada a um paciente."""
+
+    __tablename__ = "mensagem"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    paciente_id = db.Column(db.Integer, db.ForeignKey("paciente.id"), nullable=False)
+    paciente = db.relationship("Paciente", backref=db.backref("mensagens", lazy="dynamic"))
+
+    autor_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
+    autor = db.relationship("Usuario")
+
+    texto = db.Column(db.Text, nullable=False)
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Mensagem paciente={self.paciente_id} de {self.autor_id}>"

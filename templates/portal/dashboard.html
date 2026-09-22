@@ -11,11 +11,18 @@
     <thead>
       <tr>
         <th>Paciente</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {% for p in pacientes %}
-      <tr><td>{{ p.nome }}</td></tr>
+      <tr>
+        <td>{{ p.nome }}</td>
+        <td>
+          <a href="{{ url_for('tarefas_portal.listar_portal', paciente_id=p.id) }}">Tarefas</a> ·
+          <a href="{{ url_for('comunicacao_portal.conversa_portal', paciente_id=p.id) }}">Comunicação</a>
+        </td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Tarefas de casa | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Tarefas de casa — {{ paciente.nome }}</h1>
+
+  <div class="actions-bar">
+    <a href="{{ url_for('tarefas_admin.nova', paciente_id=paciente.id) }}" class="btn-inline">+ Nova tarefa</a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if tarefas %}
+    {% for t in tarefas %}
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <strong>{{ t.titulo }}</strong>
+        <span class="badge badge-{{ 'secretaria' if t.concluida else 'terapeuta' }}">
+          {{ "concluída" if t.concluida else "pendente" }}
+        </span>
+      </div>
+      {% if t.descricao %}<p style="margin:6px 0 0;">{{ t.descricao }}</p>{% endif %}
+      {% if t.prazo %}<p style="margin:6px 0 0;font-size:0.8rem;color:var(--ink-soft);">Prazo: {{ t.prazo.strftime("%d/%m/%Y") }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state">Nenhuma tarefa cadastrada ainda.</div>
+  {% endif %}
+</div>
+{% endblock %}

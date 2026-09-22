@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Comunicação | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Comunicação — {{ paciente.nome }}</h1>
+
+  <div style="max-width:640px;">
+    {% if mensagens %}
+      {% for m in mensagens %}
+      <div class="card" style="margin-bottom:10px; {{ 'border-left:4px solid var(--pink);' if m.autor_id == current_user.id else 'border-left:4px solid var(--blue);' }}">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--ink-soft);margin-bottom:6px;">
+          <span>{{ m.autor.nome }}</span>
+          <span>{{ m.criado_em.strftime("%d/%m %H:%M") }}</span>
+        </div>
+        <p style="margin:0;white-space:pre-wrap;">{{ m.texto }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="empty-state">Nenhuma mensagem ainda.</div>
+    {% endif %}
+
+    <form method="POST" style="margin-top:20px;">
+      <div class="field">
+        <textarea name="texto" rows="3" placeholder="Escreva uma mensagem..." required style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid #e0d8c3;font-family:inherit;font-size:1rem;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

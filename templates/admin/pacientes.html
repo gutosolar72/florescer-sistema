@@ -36,7 +36,9 @@
         <td>{{ p.responsaveis | map(attribute="nome") | join(", ") if p.responsaveis else "—" }}</td>
         <td>
           {% if current_user.papel in ["admin", "terapeuta"] %}
-          <a href="{{ url_for('evolucoes.listar', paciente_id=p.id) }}">Evoluções</a>
+          <a href="{{ url_for('evolucoes.listar', paciente_id=p.id) }}">Evoluções</a> ·
+          <a href="{{ url_for('tarefas_admin.listar', paciente_id=p.id) }}">Tarefas</a> ·
+          <a href="{{ url_for('comunicacao_admin.conversa', paciente_id=p.id) }}">Comunicação</a>
           {% endif %}
         </td>
       </tr>

@@ -17,12 +17,18 @@ def create_app():
     from portal import portal_bp
     from agendamentos import agendamentos_bp
     from evolucoes import evolucoes_bp
+    from tarefas import tarefas_admin_bp, tarefas_portal_bp
+    from comunicacao import comunicacao_admin_bp, comunicacao_portal_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(portal_bp)
     app.register_blueprint(agendamentos_bp)
     app.register_blueprint(evolucoes_bp)
+    app.register_blueprint(tarefas_admin_bp)
+    app.register_blueprint(tarefas_portal_bp)
+    app.register_blueprint(comunicacao_admin_bp)
+    app.register_blueprint(comunicacao_portal_bp)
 
     @app.route("/")
     def index():
@@ -43,5 +49,4 @@ def load_user(user_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    #app.run(debug=True)
     app.run(host="0.0.0.0", debug=True)
