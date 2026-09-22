@@ -19,6 +19,8 @@
 
   <p>
     <a href="{{ url_for('admin.pacientes') }}">Ver pacientes</a>
+    &nbsp;·&nbsp;
+    <a href="{{ url_for('agendamentos.listar') }}">Agendamentos</a>
     {% if current_user.is_admin %}
       &nbsp;·&nbsp;
       <a href="{{ url_for('admin.usuarios') }}">Gerenciar usuários</a>

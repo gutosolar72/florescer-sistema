@@ -22,5 +22,29 @@
   {% else %}
   <div class="empty-state">Nenhum paciente vinculado ao seu acesso ainda.</div>
   {% endif %}
+
+  <h1 style="margin-top:36px;">Próximos agendamentos</h1>
+  {% if agendamentos %}
+  <table>
+    <thead>
+      <tr>
+        <th>Data / Hora</th>
+        <th>Paciente</th>
+        <th>Terapeuta</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in agendamentos %}
+      <tr>
+        <td>{{ a.data_hora.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td>{{ a.paciente.nome }}</td>
+        <td>{{ a.terapeuta.nome }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">Nenhum agendamento futuro.</div>
+  {% endif %}
 </div>
 {% endblock %}

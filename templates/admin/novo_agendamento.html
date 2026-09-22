@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Novo agendamento | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Novo agendamento</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if not pacientes %}
+  <div class="empty-state">
+    Nenhum paciente disponível pra agendar.
+    <a href="{{ url_for('admin.novo_paciente') }}">Cadastrar paciente</a>.
+  </div>
+  {% else %}
+  <form method="POST" style="max-width: 420px;">
+    <div class="field">
+      <label for="paciente_id">Paciente</label>
+      <select id="paciente_id" name="paciente_id" required>
+        {% for p in pacientes %}
+        <option value="{{ p.id }}">{{ p.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if current_user.papel != "terapeuta" %}
+    <div class="field">
+      <label for="terapeuta_id">Terapeuta</label>
+      <select id="terapeuta_id" name="terapeuta_id" required>
+        {% for t in terapeutas %}
+        <option value="{{ t.id }}">{{ t.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <div class="field">
+      <label for="data">Data</label>
+      <input type="date" id="data" name="data" required>
+    </div>
+
+    <div class="field">
+      <label for="hora">Horário</label>
+      <input type="time" id="hora" name="hora" required>
+    </div>
+
+    <div class="field">
+      <label for="duracao_minutos">Duração (minutos)</label>
+      <input type="number" id="duracao_minutos" name="duracao_minutos" value="50" min="10" step="5">
+    </div>
+
+    <div class="field">
+      <label for="observacao">Observação (opcional)</label>
+      <input type="text" id="observacao" name="observacao">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Agendar</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

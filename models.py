@@ -8,6 +8,9 @@ from extensions import db
 # Papéis possíveis para usuários da equipe (tipo="equipe")
 PAPEIS_EQUIPE = ["admin", "terapeuta", "secretaria"]
 
+# Situações possíveis de um agendamento
+STATUS_AGENDAMENTO = ["agendado", "realizado", "cancelado", "falta"]
+
 # Tabela de associação: um paciente pode ter mais de um responsável,
 # e um responsável pode ter mais de um paciente (ex: irmãos).
 paciente_responsavel = db.Table(
@@ -86,3 +89,26 @@ class Paciente(db.Model):
 
     def __repr__(self):
         return f"<Paciente {self.nome}>"
+
+
+class Agendamento(db.Model):
+    __tablename__ = "agendamento"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    paciente_id = db.Column(db.Integer, db.ForeignKey("paciente.id"), nullable=False)
+    paciente = db.relationship("Paciente", backref=db.backref("agendamentos", lazy="dynamic"))
+
+    terapeuta_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
+    terapeuta = db.relationship("Usuario", backref=db.backref("agendamentos", lazy="dynamic"))
+
+    data_hora = db.Column(db.DateTime, nullable=False)
+    duracao_minutos = db.Column(db.Integer, nullable=False, default=50)
+
+    status = db.Column(db.String(20), nullable=False, default="agendado")
+    observacao = db.Column(db.String(500), nullable=True)
+
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Agendamento {self.paciente_id} em {self.data_hora}>"

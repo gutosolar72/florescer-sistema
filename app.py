@@ -15,10 +15,12 @@ def create_app():
     from auth import auth_bp
     from admin import admin_bp
     from portal import portal_bp
+    from agendamentos import agendamentos_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(portal_bp)
+    app.register_blueprint(agendamentos_bp)
 
     @app.route("/")
     def index():
