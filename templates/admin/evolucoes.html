@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Evoluções | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Evoluções — {{ paciente.nome }}</h1>
+  <p class="subtitle">Registro clínico das sessões. Visível só pra equipe.</p>
+
+  <div class="actions-bar">
+    <a href="{{ url_for('evolucoes.nova', paciente_id=paciente.id) }}" class="btn-inline">+ Nova evolução</a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if evolucoes %}
+    {% for e in evolucoes %}
+    <div class="card" style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+        <strong>{{ e.data.strftime("%d/%m/%Y") }}</strong>
+        <span style="font-size:0.8rem;color:var(--ink-soft);">{{ e.terapeuta.nome }}</span>
+      </div>
+      <p style="margin:0;white-space:pre-wrap;">{{ e.texto }}</p>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty-state">Nenhuma evolução registrada ainda.</div>
+  {% endif %}
+</div>
+{% endblock %}

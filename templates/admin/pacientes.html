@@ -25,6 +25,7 @@
         <th>Nome</th>
         <th>Terapeuta</th>
         <th>Responsável(is)</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -33,6 +34,11 @@
         <td>{{ p.nome }}</td>
         <td>{{ p.terapeuta.nome if p.terapeuta else "—" }}</td>
         <td>{{ p.responsaveis | map(attribute="nome") | join(", ") if p.responsaveis else "—" }}</td>
+        <td>
+          {% if current_user.papel in ["admin", "terapeuta"] %}
+          <a href="{{ url_for('evolucoes.listar', paciente_id=p.id) }}">Evoluções</a>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

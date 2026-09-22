@@ -112,3 +112,29 @@ class Agendamento(db.Model):
 
     def __repr__(self):
         return f"<Agendamento {self.paciente_id} em {self.data_hora}>"
+
+
+class Evolucao(db.Model):
+    """Registro clínico de uma sessão — visível só pra equipe (admin/terapeuta),
+    nunca pra secretaria nem pro responsável."""
+
+    __tablename__ = "evolucao"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    paciente_id = db.Column(db.Integer, db.ForeignKey("paciente.id"), nullable=False)
+    paciente = db.relationship("Paciente", backref=db.backref("evolucoes", lazy="dynamic"))
+
+    terapeuta_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
+    terapeuta = db.relationship("Usuario", backref=db.backref("evolucoes", lazy="dynamic"))
+
+    agendamento_id = db.Column(db.Integer, db.ForeignKey("agendamento.id"), nullable=True)
+    agendamento = db.relationship("Agendamento", backref=db.backref("evolucao", uselist=False))
+
+    data = db.Column(db.Date, nullable=False)
+    texto = db.Column(db.Text, nullable=False)
+
+    criado_em = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Evolucao paciente={self.paciente_id} em {self.data}>"

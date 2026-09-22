@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Nova evolução | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Nova evolução — {{ paciente.nome }}</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" style="max-width: 560px;">
+    <div class="field">
+      <label for="data">Data da sessão</label>
+      <input type="date" id="data" name="data" value="{{ hoje if hoje is defined else '' }}">
+    </div>
+
+    {% if agendamentos %}
+    <div class="field">
+      <label for="agendamento_id">Vincular a um agendamento (opcional)</label>
+      <select id="agendamento_id" name="agendamento_id">
+        <option value="">— Sem vínculo —</option>
+        {% for a in agendamentos %}
+        <option value="{{ a.id }}">{{ a.data_hora.strftime("%d/%m/%Y %H:%M") }} ({{ a.status }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <div class="field">
+      <label for="texto">O que aconteceu na sessão</label>
+      <textarea id="texto" name="texto" rows="8" required style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid #e0d8c3;font-family:inherit;font-size:1rem;"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar evolução</button>
+  </form>
+</div>
+{% endblock %}
