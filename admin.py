@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
@@ -30,6 +32,57 @@ def pacientes():
     else:
         lista = Paciente.query.filter_by(ativo=True).all()
     return render_template("admin/pacientes.html", pacientes=lista)
+
+
+@admin_bp.route("/pacientes/novo", methods=["GET", "POST"])
+@login_required
+@equipe_required("admin", "secretaria")
+def novo_paciente():
+    terapeutas = Usuario.query.filter_by(tipo="equipe", papel="terapeuta", ativo=True).order_by(Usuario.nome).all()
+    responsaveis = Usuario.query.filter_by(tipo="responsavel", ativo=True).order_by(Usuario.nome).all()
+
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        data_nascimento_str = request.form.get("data_nascimento", "").strip()
+        terapeuta_id = request.form.get("terapeuta_id") or None
+        responsavel_ids = request.form.getlist("responsavel_ids")
+
+        if not nome:
+            flash("Informe o nome do paciente.", "error")
+            return render_template(
+                "admin/novo_paciente.html", terapeutas=terapeutas, responsaveis=responsaveis
+            )
+
+        data_nascimento = None
+        if data_nascimento_str:
+            try:
+                data_nascimento = datetime.strptime(data_nascimento_str, "%Y-%m-%d").date()
+            except ValueError:
+                flash("Data de nascimento inválida.", "error")
+                return render_template(
+                    "admin/novo_paciente.html", terapeutas=terapeutas, responsaveis=responsaveis
+                )
+
+        paciente = Paciente(
+            nome=nome,
+            data_nascimento=data_nascimento,
+            terapeuta_id=int(terapeuta_id) if terapeuta_id else None,
+        )
+
+        if responsavel_ids:
+            paciente.responsaveis = Usuario.query.filter(
+                Usuario.id.in_(responsavel_ids), Usuario.tipo == "responsavel"
+            ).all()
+
+        db.session.add(paciente)
+        db.session.commit()
+
+        flash(f"Paciente {nome} cadastrado com sucesso.", "success")
+        return redirect(url_for("admin.pacientes"))
+
+    return render_template(
+        "admin/novo_paciente.html", terapeutas=terapeutas, responsaveis=responsaveis
+    )
 
 
 @admin_bp.route("/usuarios")

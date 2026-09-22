@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Novo paciente | Florescer{% endblock %}
+{% block body %}
+{% include "_topbar.html" %}
+<div class="container page">
+  <h1>Novo paciente</h1>
+  <p class="subtitle">Cadastre o paciente e já vincule terapeuta e responsável, se existirem.</p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" style="max-width: 480px;">
+    <div class="field">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" name="nome" required>
+    </div>
+
+    <div class="field">
+      <label for="data_nascimento">Data de nascimento</label>
+      <input type="date" id="data_nascimento" name="data_nascimento">
+    </div>
+
+    <div class="field">
+      <label for="terapeuta_id">Terapeuta responsável</label>
+      <select id="terapeuta_id" name="terapeuta_id">
+        <option value="">— Sem terapeuta definido ainda —</option>
+        {% for t in terapeutas %}
+        <option value="{{ t.id }}">{{ t.nome }}</option>
+        {% endfor %}
+      </select>
+      {% if not terapeutas %}
+      <p style="font-size:0.8rem;color:var(--ink-soft);margin-top:6px;">
+        Nenhum terapeuta cadastrado ainda — <a href="{{ url_for('admin.novo_usuario') }}">criar usuário</a>.
+      </p>
+      {% endif %}
+    </div>
+
+    <div class="field">
+      <label for="responsavel_ids">Responsável(is)</label>
+      <select id="responsavel_ids" name="responsavel_ids" multiple size="4">
+        {% for r in responsaveis %}
+        <option value="{{ r.id }}">{{ r.nome }} ({{ r.email }})</option>
+        {% endfor %}
+      </select>
+      <p style="font-size:0.8rem;color:var(--ink-soft);margin-top:6px;">
+        Segure Ctrl (ou Cmd no Mac) pra selecionar mais de um.
+        {% if not responsaveis %}
+          Nenhum responsável cadastrado ainda — <a href="{{ url_for('admin.novo_usuario') }}">criar usuário</a>.
+        {% endif %}
+      </p>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cadastrar paciente</button>
+  </form>
+</div>
+{% endblock %}

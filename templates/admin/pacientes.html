@@ -12,12 +12,19 @@
     {% endif %}
   </p>
 
+  {% if current_user.papel in ["admin", "secretaria"] %}
+  <div class="actions-bar">
+    <a href="{{ url_for('admin.novo_paciente') }}" class="btn-inline">+ Novo paciente</a>
+  </div>
+  {% endif %}
+
   {% if pacientes %}
   <table>
     <thead>
       <tr>
         <th>Nome</th>
         <th>Terapeuta</th>
+        <th>Responsável(is)</th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +32,7 @@
       <tr>
         <td>{{ p.nome }}</td>
         <td>{{ p.terapeuta.nome if p.terapeuta else "—" }}</td>
+        <td>{{ p.responsaveis | map(attribute="nome") | join(", ") if p.responsaveis else "—" }}</td>
       </tr>
       {% endfor %}
     </tbody>
